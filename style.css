@@ -86,7 +86,7 @@ main {
   bottom: 0;
   background-color: #fff8;
   backdrop-filter: blur(2px);
-  transition: backdrop-filter 0.3s linear;
+  transition: all 0.3s linear;
 }
 .card:hover::before {
   backdrop-filter: blur(0);
