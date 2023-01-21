@@ -44,7 +44,7 @@ form.img_link.addEventListener("change", (e) => {
 form.img_link.addEventListener("input", (e) => {
   form.firstElementChild.style.backgroundImage = `url(${e.target.value})`;
 });
-form.addEventListener("submit", (e) => {
+form.addEventListener("submit", async (e) => {
   e.preventDefault();
   let body = {};
   for (let i = 0; i < form.elements.length; i++) {
@@ -60,7 +60,7 @@ form.addEventListener("submit", (e) => {
     }
   }
   console.log(body);
-  api
+  await api
     .addCat(body)
     .then((res) => res.json())
     .then((data) => {
@@ -71,10 +71,12 @@ form.addEventListener("submit", (e) => {
         console.log(data);
       }
     });
+
+    getCats(api);
 });
 
-const getCats = function (api) {
-  api
+const getCats = async function (api) {
+  await api
     .getCats()
     .then((res) => res.json())
     .then((data) => {
