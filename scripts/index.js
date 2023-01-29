@@ -1,24 +1,15 @@
 let main = document.querySelector("main");
-
-const updCards = function (data) {
-  main.innerHTML = "";
-  data.forEach(function (cat) {
-    if (cat.id) {
-      let card = `<div class="${
-        cat.favourite ? "card like" : "card"
-      }" style="background-image:
-  url(${cat.img_link || "images/cat.jpg"})">
-  <span>${cat.name}</span>
-  </div>`;
-      main.innerHTML += card;
-    }
-  });
-  let cards = document.getElementsByClassName("card");
-  for (let i = 0, cnt = cards.length; i < cnt; i++) {
-    const width = cards[i].offsetWidth;
-    cards[i].style.height = width * 0.6 + "px";
-  }
-};
+cats.forEach(function (cat) {
+  let card = `<div class="card" style="background-image: url(${cat.img_link})">
+ <span>${cat.name}</span>
+ </div>`;
+  main.innerHTML += card;
+});
+let cards = document.getElementsByClassName("card");
+for (let i = 0, cnt = cards.length; i < cnt; i++) {
+  const width = cards[i].offsetWidth;
+  cards[i].style.height = width * 0.6 + "px";
+}
 
 let addBtn = document.querySelector("#add");
 let popupForm = document.querySelector("#popup-form");
@@ -35,7 +26,6 @@ closePopupForm.addEventListener("click", () => {
   popupForm.parentElement.classList.remove("active");
 });
 
-const api = new Api("nata_kers");
 
 let form = document.forms[0];
 form.img_link.addEventListener("change", (e) => {
@@ -44,7 +34,7 @@ form.img_link.addEventListener("change", (e) => {
 form.img_link.addEventListener("input", (e) => {
   form.firstElementChild.style.backgroundImage = `url(${e.target.value})`;
 });
-form.addEventListener("submit", async (e) => {
+form.addEventListener("submit", (e) => {
   e.preventDefault();
   let body = {};
   for (let i = 0; i < form.elements.length; i++) {
@@ -59,30 +49,14 @@ form.addEventListener("submit", async (e) => {
       }
     }
   }
-  console.log(body);
-  await api
-    .addCat(body)
-    .then((res) => res.json())
-    .then((data) => {
-      if (data.message === "ok") {
-        form.reset();
-        closePopupForm.click();
-      } else {
-        console.log(data);
-      }
-    });
-
-    getCats(api);
+  let card1 = `<div class="card" style="background-image: url(${
+    body.img_link ? body.img_link : "./images/cat.jpg"
+  })">
+ <span>${body.name}</span>
+ </div>`;
+  main.innerHTML += card1;
+  const width = main.lastChild.offsetWidth;
+  main.lastChild.style.height = width * 0.6 + "px";
+  form.reset();
+  closePopupForm.click();
 });
-
-const getCats = async function (api) {
-  await api
-    .getCats()
-    .then((res) => res.json())
-    .then((data) => {
-      if (data.message === "ok") {
-        updCards(data.data);
-      }
-    });
-};
-getCats(api);
